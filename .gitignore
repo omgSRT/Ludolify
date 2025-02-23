@@ -161,4 +161,4 @@ dist/
 nbdist/
 .nb-gradle/
 /.idea
-src/main/resources/local.env
+local.env

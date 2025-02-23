@@ -7,8 +7,10 @@ spring:
 
   data:
     mongodb:
-      uri: mongodb+srv://${MONGODB_USER:default_user}:${MONGODB_PASSWORD:default_password}@omgsrt.990t6.mongodb.net/?retryWrites=true&w=majority&appName=omgsrt
-      database: ludolify
+      username: ${MONGODB_USER:default_user}
+      password: ${MONGODB_PASSWORD:default_password}
+      uri: mongodb+srv://${MONGODB_USER:${MONGODB_USER:default_user}}:${MONGODB_PASSWORD:${MONGODB_PASSWORD:default_password}}@omgsrt.990t6.mongodb.net/?retryWrites=true&w=majority&appName=omgsrt
+      database: ${MONGODB_DATABASE:default_database}
 
 springdoc:
   swagger-ui:
