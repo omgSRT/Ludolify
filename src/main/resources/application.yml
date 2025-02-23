@@ -3,11 +3,11 @@ spring:
     name: Ludolify
 
   jwt:
-    secret: ${JWT_SECRET}
+    secret: ${JWT_SECRET:default_jwt_secret}
 
   data:
     mongodb:
-      uri: mongodb+srv://${MONGODB_USER}:${MONGODB_PASSWORD}@omgsrt.990t6.mongodb.net/?retryWrites=true&w=majority&appName=omgsrt
+      uri: mongodb+srv://${MONGODB_USER:default_user}:${MONGODB_PASSWORD:default_password}@omgsrt.990t6.mongodb.net/?retryWrites=true&w=majority&appName=omgsrt
       database: ludolify
 
 springdoc:

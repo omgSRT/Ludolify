@@ -1,33 +1,48 @@
 package com.omgsrt.Ludolify.shared.configuration;
 
 import io.github.cdimascio.dotenv.Dotenv;
+import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.core.env.MutablePropertySources;
+import org.springframework.core.env.PropertiesPropertySource;
+
+import java.util.Properties;
 
 @Configuration
 @Order(Ordered.HIGHEST_PRECEDENCE)
-@PropertySource("classpath:local.env")
+//@PropertySource("classpath:local.env")
 public class DotEnvConfiguration {
-    @EventListener(ApplicationReadyEvent.class)
-    public void loadLocalDotEnv(){
+    @EventListener(ApplicationEnvironmentPreparedEvent.class)
+    public void loadLocalDotEnv(ApplicationEnvironmentPreparedEvent event){
         Dotenv dotenv = Dotenv.configure()
+                .directory("./src/main/resources/")
                 .filename("local.env")
                 .ignoreIfMalformed()
                 .ignoreIfMissing()
                 .load();
 
-        String jwtSecret = getEnvVar(dotenv, "JWT_SECRET");
-        String mongodbUser = getEnvVar(dotenv, "MONGODB_USER");
-        String mongodbPassword = getEnvVar(dotenv, "MONGODB_PASSWORD");
+        ConfigurableEnvironment environment = event.getEnvironment();
+        MutablePropertySources propertySources = environment.getPropertySources();
+        Properties properties = new Properties();
 
-        //set data from local.env to application.yml
-        setSystemProperty("JWT_SECRET", jwtSecret);
-        setSystemProperty("MONGODB_USER", mongodbUser);
-        setSystemProperty("MONGODB_PASSWORD", mongodbPassword);
+        setPropertyIfMissing(dotenv, properties, "JWT_SECRET");
+        setPropertyIfMissing(dotenv, properties, "MONGODB_USER");
+        setPropertyIfMissing(dotenv, properties, "MONGODB_PASSWORD");
+
+        propertySources.addFirst(new PropertiesPropertySource("dotenvProperties", properties));
+    }
+
+    private void setPropertyIfMissing(Dotenv dotenv, Properties properties, String key) {
+        String value = dotenv.get(key, System.getenv(key)); // Use env var if .env is missing
+        if (value != null && !value.isEmpty()) {
+            properties.setProperty(key, value);
+        }
     }
 
     private String getEnvVar(Dotenv dotenv, String key) {
@@ -37,7 +52,6 @@ public class DotEnvConfiguration {
         }
         return value;
     }
-
     private void setSystemProperty(String key, String value) {
         System.clearProperty(key);
         System.setProperty(key, value);
