@@ -16,8 +16,8 @@ services:
     build: src
     image: my-spring-boot-app
     container_name: spring-boot-app
-    depends_on:
-      - mongodb
+#    depends_on:
+#      - mongodb
     ports:
       - "8080:8080"
     environment:
