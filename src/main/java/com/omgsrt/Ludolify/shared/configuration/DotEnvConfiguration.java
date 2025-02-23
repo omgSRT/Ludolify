@@ -18,6 +18,7 @@ import java.util.Properties;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 //@PropertySource("classpath:local.env")
 public class DotEnvConfiguration {
+    //to-do: fix multiple data line in .env cannot be read
     @EventListener(ApplicationEnvironmentPreparedEvent.class)
     public void loadLocalDotEnv(ApplicationEnvironmentPreparedEvent event){
         Dotenv dotenv = Dotenv.configure()

@@ -39,7 +39,7 @@ public class OpenAPIConfiguration {
 
     private List<Server> servers() {
         return Arrays.asList(
-                new Server().url("http://docker:8080").description("Docker Server (placeholder)"),
+                new Server().url("https://ludolify.onrender.com/").description("Render Server"),
                 new Server().url("http://localhost:8080").description("Local server")
         );
     }
