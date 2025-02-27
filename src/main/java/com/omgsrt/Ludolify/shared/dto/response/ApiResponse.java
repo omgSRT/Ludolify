@@ -3,6 +3,7 @@ package com.omgsrt.Ludolify.shared.dto.response;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.http.HttpStatus;
 
 @Data
 @NoArgsConstructor
@@ -12,6 +13,6 @@ import lombok.experimental.FieldDefaults;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApiResponse<T> {
     int code = 0;
-    String message = "Undefined Exception";
+    String message;
     T entity;
 }

@@ -42,7 +42,7 @@ public class SecurityConfiguration {
                         .pathMatchers(HttpMethod.PUT, PUBLIC_ENDPOINT_PUT).permitAll()
                         .pathMatchers(HttpMethod.DELETE, PUBLIC_ENDPOINT_DELETE).permitAll()
                         .pathMatchers("/swagger-ui/**", "/v3/api-docs/**",
-                                "/swagger-resources/**", "/test/**").permitAll()
+                                "/swagger-resources/**").permitAll()
                         .anyExchange().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
