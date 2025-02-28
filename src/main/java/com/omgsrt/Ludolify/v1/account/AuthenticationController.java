@@ -2,6 +2,7 @@ package com.omgsrt.Ludolify.v1.account;
 
 import com.omgsrt.Ludolify.shared.dto.response.ApiResponse;
 import com.omgsrt.Ludolify.shared.enums.SuccessCode;
+import com.omgsrt.Ludolify.shared.exception.ErrorCode;
 import com.omgsrt.Ludolify.v1.account.dto.request.LoginRequest;
 import com.omgsrt.Ludolify.v1.account.dto.response.LoginResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,6 +31,10 @@ public class AuthenticationController {
             description = "OK",
             content = @Content(mediaType = "application/json",
             schema = @Schema(implementation = ApiResponse.class)))
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400",
+            description = "Bad Request",
+            content = @Content(mediaType = "application/json",
+            schema = @Schema(implementation = ErrorCode.class)))
     public Mono<ResponseEntity<ApiResponse<LoginResponse>>> login(@RequestBody LoginRequest request){
         return authenticationService.login(request)
                 .map(loginResponse -> {

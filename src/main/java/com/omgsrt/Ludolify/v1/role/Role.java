@@ -2,6 +2,7 @@ package com.omgsrt.Ludolify.v1.role;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -18,7 +19,7 @@ import java.util.UUID;
 public class Role {
     @Id
     @Field("_id")
-    String id;
+    ObjectId id;
     String name;
     Date createdAt;
     Date updatedAt;

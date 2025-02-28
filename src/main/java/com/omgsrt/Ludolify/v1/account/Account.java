@@ -2,6 +2,7 @@ package com.omgsrt.Ludolify.v1.account;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -20,7 +21,7 @@ import java.util.UUID;
 public class Account {
     @Id
     @Field("_id")
-    String id;
+    ObjectId id;
     String username;
     String handle;
     Date dateOfBirth;
@@ -35,5 +36,5 @@ public class Account {
     Date updatedAt;
     Date lastSignInAt;
 
-    Set<String> roleIds;
+    Set<ObjectId> roleIds;
 }

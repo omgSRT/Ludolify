@@ -26,7 +26,7 @@ import java.util.Collection;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class SecurityConfiguration {
-    String[] PUBLIC_ENDPOINT_GET = {""};
+    String[] PUBLIC_ENDPOINT_GET = {"/role/**"};
     String[] PUBLIC_ENDPOINT_POST = {"/authentication/**", ""};
     String[] PUBLIC_ENDPOINT_PUT = {""};
     String[] PUBLIC_ENDPOINT_DELETE = {""};

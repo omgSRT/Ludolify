@@ -69,12 +69,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
                     JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
                             .subject(account.getUsername())
-                            .issuer("dev-GSU24SE23")
+                            .issuer("dev-ludolify")
                             .issueTime(now)
                             .expirationTime(expirationTime)
                             .jwtID(UUID.randomUUID().toString())
-                            .claim("accountId", account.getId())
-                            .claim("scope", scope) // Use the reactive scope value
+                            .claim("accountId", account.getId().toString())
+                            .claim("scope", scope)
                             .build();
 
                     Payload payload = new Payload(jwtClaimsSet.toJSONObject());
