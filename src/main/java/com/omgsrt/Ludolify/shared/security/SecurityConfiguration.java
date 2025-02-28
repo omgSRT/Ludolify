@@ -27,7 +27,7 @@ import java.util.Collection;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class SecurityConfiguration {
     String[] PUBLIC_ENDPOINT_GET = {""};
-    String[] PUBLIC_ENDPOINT_POST = {""};
+    String[] PUBLIC_ENDPOINT_POST = {"/authentication/**", ""};
     String[] PUBLIC_ENDPOINT_PUT = {""};
     String[] PUBLIC_ENDPOINT_DELETE = {""};
 

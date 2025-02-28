@@ -31,33 +31,6 @@ public class SpringSecurityService {
                 .defaultIfEmpty(false);
     }
 
-//    public String generateToken(int expirationDay) {
-//        Date now = new Date();
-//        Instant nowInstant = now.toInstant();
-//        Instant expirationInstant = nowInstant.plus(expirationDay, ChronoUnit.DAYS);
-//        Date expirationTime = Date.from(expirationInstant);
-//
-//        JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
-//
-//        JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-//                .issuer("dev-Yummigo")
-//                .issueTime(now)
-//                .expirationTime(expirationTime)
-//                .jwtID(UUID.randomUUID().toString())
-//                //.claim("scope", buildScope(account))
-//                .build();
-//
-//        Payload payload = new Payload(jwtClaimsSet.toJSONObject());
-//
-//        JWSObject jwsObject = new JWSObject(header, payload);
-//        try {
-//            jwsObject.sign(new MACSigner(jwtSecret.getBytes()));
-//            return jwsObject.serialize();
-//        } catch (JOSEException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-
     private Mono<SignedJWT> verifyToken(String token) {
         return Mono.fromCallable(() -> {
             try {
@@ -83,11 +56,4 @@ public class SpringSecurityService {
             return Mono.empty();
         });
     }
-//    private String buildScope(Account account) {
-//        StringJoiner stringJoiner = new StringJoiner(" ");
-//        if (account.getRole() != null && account.getRole().getName() != null) {
-//            stringJoiner.add(account.getRole().getName());
-//        }
-//        return stringJoiner.toString();
-//    }
 }

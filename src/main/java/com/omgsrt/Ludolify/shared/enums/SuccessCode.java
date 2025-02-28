@@ -14,6 +14,7 @@ public enum SuccessCode {
     SUCCESSFULLY_UPLOAD_NEW_DATA(20005, "Data Successfully Uploaded", HttpStatus.CREATED),
     SUCCESSFULLY_UPLOAD_BY_REPLACE_DATA(20006, "Data Successfully Uploaded", HttpStatus.OK),
     SUCCESSFULLY_DOWNLOAD(20007, "Data Successfully Downloaded", HttpStatus.OK),
+    SUCCESSFULLY_LOGIN(20008, "Login Successfully", HttpStatus.OK),
     ;
     private int code;
     private String message;
