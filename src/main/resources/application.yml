@@ -12,6 +12,13 @@ spring:
       uri: mongodb+srv://${MONGODB_USER:${MONGODB_USER:default_user}}:${MONGODB_PASSWORD:${MONGODB_PASSWORD:default_password}}@omgsrt.990t6.mongodb.net/?retryWrites=true&w=majority&appName=omgsrt
       database: ${MONGODB_DATABASE:default_database}
 
+telegram:
+  bot:
+    name: ${TELEGRAM_BOT_NAME:default_name}
+    token: ${TELEGRAM_BOT_TOKEN:default_token}
+  chat:
+    id: ${TELEGRAM_CHAT_ID:default_id}
+
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
@@ -21,3 +28,8 @@ springdoc:
 server:
   port: 8080
 
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG

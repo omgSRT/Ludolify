@@ -27,28 +27,40 @@ public class SpringSecurityService {
 
     public Mono<Boolean> introspectJWT(String token) {
         return verifyToken(token)
-                .map(jwt -> true)
-                .defaultIfEmpty(false);
+                .map(jwt -> {
+                    try {
+                        log.info("Token is valid: {}", jwt.getJWTClaimsSet().getSubject());
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
+                    }
+                    return true;
+                })
+                .onErrorResume(e -> {
+                    log.error("JWT introspection failed: {}", e.getMessage());
+                    return Mono.just(false);
+                });
     }
 
     private Mono<SignedJWT> verifyToken(String token) {
         return Mono.fromCallable(() -> {
             try {
-                JWSObject jwsObject = JWSObject.parse(token);
+                SignedJWT signedJWT = SignedJWT.parse(token);
                 MACVerifier verifier = new MACVerifier(jwtSecret.getBytes());
 
-                if (!jwsObject.verify(verifier)) {
-                    return null;
+                if (!signedJWT.verify(verifier)) {
+                    log.warn("JWT verification failed: Signature does not match");
+                    throw new AppException(ErrorCode.UNDEFINED_EXCEPTION);
                 }
 
-                SignedJWT signedJWT = SignedJWT.parse(token);
-                Date expiredDate = signedJWT.getJWTClaimsSet().getExpirationTime();
-                if (expiredDate.before(new Date())) {
-                    return null;
+                Date expirationDate = signedJWT.getJWTClaimsSet().getExpirationTime();
+                if (expirationDate.before(new Date())) {
+                    log.warn("JWT expired at {}", expirationDate);
+                    throw new AppException(ErrorCode.UNDEFINED_EXCEPTION);
                 }
 
                 return signedJWT;
             } catch (JOSEException | ParseException e) {
+                log.error("JWT parsing/verifying failed", e);
                 throw new AppException(ErrorCode.UNDEFINED_EXCEPTION);
             }
         }).onErrorResume(e -> {
