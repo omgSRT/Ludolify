@@ -3,7 +3,6 @@ package com.omgsrt.Ludolify.v1.telegram;
 import com.omgsrt.Ludolify.shared.dto.response.ApiResponse;
 import com.omgsrt.Ludolify.shared.enums.SuccessCode;
 import com.omgsrt.Ludolify.shared.exception.ErrorCode;
-import com.omgsrt.Ludolify.shared.pagination.PaginationResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -36,7 +35,7 @@ public class TelegramController {
             description = "Bad Request",
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = ErrorCode.class)))
-    public Mono<ResponseEntity<ApiResponse<String>>> sendMessage(@RequestParam String message){
+    public Mono<ResponseEntity<ApiResponse<String>>> sendMessage(@RequestParam String message) {
         return telegramService.sendMessage(message)
                 .map(content -> {
                     SuccessCode successCode = SuccessCode.SUCCESSFULLY_SEND_MESSAGE;

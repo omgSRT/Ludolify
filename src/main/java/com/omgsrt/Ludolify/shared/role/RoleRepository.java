@@ -1,4 +1,4 @@
-package com.omgsrt.Ludolify.v1.role;
+package com.omgsrt.Ludolify.shared.role;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;

@@ -1,4 +1,4 @@
-package com.omgsrt.Ludolify.v1.role;
+package com.omgsrt.Ludolify.shared.role;
 
 import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 import com.omgsrt.Ludolify.shared.dto.response.ApiResponse;
@@ -13,14 +13,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @RestController

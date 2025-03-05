@@ -1,8 +1,8 @@
-package com.omgsrt.Ludolify.v1.account;
+package com.omgsrt.Ludolify.shared.account;
 
 import com.omgsrt.Ludolify.shared.dataInitializer.DataInitializer;
-import com.omgsrt.Ludolify.v1.role.Role;
-import com.omgsrt.Ludolify.v1.role.RoleRepository;
+import com.omgsrt.Ludolify.shared.role.Role;
+import com.omgsrt.Ludolify.shared.role.RoleRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

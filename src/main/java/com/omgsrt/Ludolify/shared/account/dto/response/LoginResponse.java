@@ -1,4 +1,4 @@
-package com.omgsrt.Ludolify.v1.account.dto.response;
+package com.omgsrt.Ludolify.shared.account.dto.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;

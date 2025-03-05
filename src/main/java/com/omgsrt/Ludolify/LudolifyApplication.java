@@ -25,7 +25,7 @@ public class LudolifyApplication {
     private final List<DataInitializer> initializerList;
 
     public static void main(String[] args) {
-		SpringApplication.run(LudolifyApplication.class, args);
+        SpringApplication.run(LudolifyApplication.class, args);
     }
 
     @Bean

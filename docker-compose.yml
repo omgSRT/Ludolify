@@ -1,23 +1,23 @@
 version: '4'
 services:
-#  mongodb:
-#    image: mongo:latest
-#    container_name: mongodb
-#    ports:
-#      - "27017:27017"
-#    environment:
-#      MONGO_INITDB_ROOT_USERNAME: root
-#      MONGO_INITDB_ROOT_PASSWORD: root
-#      MONGO_INITDB_DATABASE: cooking-recipe-sharing-platform
-#    volumes:
-#      - ./data:/data/db
+  #  mongodb:
+  #    image: mongo:latest
+  #    container_name: mongodb
+  #    ports:
+  #      - "27017:27017"
+  #    environment:
+  #      MONGO_INITDB_ROOT_USERNAME: root
+  #      MONGO_INITDB_ROOT_PASSWORD: root
+  #      MONGO_INITDB_DATABASE: cooking-recipe-sharing-platform
+  #    volumes:
+  #      - ./data:/data/db
 
   app:
     build: src
     image: my-spring-boot-app
     container_name: spring-boot-app
-#    depends_on:
-#      - mongodb
+    #    depends_on:
+    #      - mongodb
     ports:
       - "8080:8080"
     environment:

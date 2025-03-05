@@ -1,4 +1,4 @@
-package com.omgsrt.Ludolify.v1.account.dto.request;
+package com.omgsrt.Ludolify.shared.account.dto.request;
 
 import jakarta.validation.constraints.Size;
 import lombok.*;

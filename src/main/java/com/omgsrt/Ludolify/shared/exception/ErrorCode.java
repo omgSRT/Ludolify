@@ -17,6 +17,8 @@ public enum ErrorCode {
     INVALID_PASSWORD_LENGTH(10007, "Password Must Be At Least 8 Characters", HttpStatus.BAD_REQUEST),
     INVALID_USERNAME_LENGTH(10008, "Username Must Be At Least 1 Character", HttpStatus.BAD_REQUEST),
     INVALID_USERNAME_OR_PASSWORD(10009, "Wrong Username Or Password", HttpStatus.BAD_REQUEST),
+    ACCOUNT_NOT_FOUND(10010, "Account Not Found", HttpStatus.NOT_FOUND),
+    INVALID_OR_EXPIRED_TOKEN(10011, "Invalid Or Expired Token", HttpStatus.BAD_REQUEST),
     ;
     private int code;
     private String message;

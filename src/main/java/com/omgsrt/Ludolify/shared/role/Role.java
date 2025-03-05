@@ -1,4 +1,4 @@
-package com.omgsrt.Ludolify.v1.role;
+package com.omgsrt.Ludolify.shared.role;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -8,7 +8,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Date;
-import java.util.UUID;
 
 @Document(collection = "roles")
 @Data

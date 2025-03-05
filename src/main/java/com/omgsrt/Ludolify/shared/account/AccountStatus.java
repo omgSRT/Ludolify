@@ -1,4 +1,4 @@
-package com.omgsrt.Ludolify.v1.account;
+package com.omgsrt.Ludolify.shared.account;
 
 public enum AccountStatus {
     PENDING,

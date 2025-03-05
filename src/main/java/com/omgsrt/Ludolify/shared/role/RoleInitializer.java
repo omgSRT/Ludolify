@@ -1,4 +1,4 @@
-package com.omgsrt.Ludolify.v1.role;
+package com.omgsrt.Ludolify.shared.role;
 
 import com.omgsrt.Ludolify.shared.dataInitializer.DataInitializer;
 import lombok.AccessLevel;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
