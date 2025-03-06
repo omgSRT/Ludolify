@@ -2,6 +2,7 @@ package com.omgsrt.Ludolify.shared.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.omgsrt.Ludolify.shared.dto.response.ApiResponse;
+import com.omgsrt.Ludolify.shared.exception.AppException;
 import com.omgsrt.Ludolify.shared.exception.ErrorCode;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -27,29 +28,19 @@ public class CustomAuthenticationEntryPoint implements ServerAuthenticationEntry
         log.info("CustomAuthenticationEntryPoint: Path: {}, Exception: {}, Type: {}",
                 exchange.getRequest().getPath(), ex.getMessage(), ex.getClass().getSimpleName());
 
-        ErrorCode errorCode = ErrorCode.UNAUTHORIZED;
+        AppException appException = (ex.getCause() instanceof AppException)
+                ? (AppException) ex.getCause()
+                : new AppException(ErrorCode.UNAUTHORIZED);
 
         ApiResponse<String> apiResponse = ApiResponse.<String>builder()
-                .code(errorCode.getCode())
-                .message(errorCode.getMessage())
+                .code(appException.getErrorCode().getCode())
+                .message(appException.getMessage())
                 .build();
 
-        exchange.getResponse().setStatusCode(errorCode.getStatusCode());
+        exchange.getResponse().setStatusCode(ErrorCode.UNAUTHORIZED.getStatusCode());
         exchange.getResponse().getHeaders().setContentType(MediaType.APPLICATION_JSON);
-        exchange.getResponse().getHeaders().remove(HttpHeaders.WWW_AUTHENTICATE);
 
-        return Mono.just(apiResponse)
-                .flatMap(response -> {
-                    try {
-                        byte[] jsonBytes = objectMapper.writeValueAsBytes(response);
-                        log.info("Writing response: {}", new String(jsonBytes));
-                        return exchange.getResponse().writeWith(
-                                Mono.just(exchange.getResponse().bufferFactory().wrap(jsonBytes))
-                        );
-                    } catch (Exception e) {
-                        log.error("Failed to serialize response", e);
-                        return Mono.error(new RuntimeException("Failed to serialize response", e));
-                    }
-                });
+        return Mono.fromCallable(() -> objectMapper.writeValueAsBytes(apiResponse))
+                .flatMap(bytes -> exchange.getResponse().writeWith(Mono.just(exchange.getResponse().bufferFactory().wrap(bytes))));
     }
 }

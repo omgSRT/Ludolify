@@ -20,6 +20,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
+import org.springframework.security.web.server.util.matcher.NegatedServerWebExchangeMatcher;
+import org.springframework.security.web.server.util.matcher.OrServerWebExchangeMatcher;
+import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers;
 import reactor.core.publisher.Mono;
 
 @Configuration
@@ -29,8 +32,8 @@ import reactor.core.publisher.Mono;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class SecurityConfiguration {
-    String[] PUBLIC_ENDPOINT_GET = {""};
-    String[] PUBLIC_ENDPOINT_POST = {"/authentication/**", ""};
+    String[] PUBLIC_ENDPOINT_GET = {"/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/favicon.io"};
+    String[] PUBLIC_ENDPOINT_POST = {"/authentication/**"};
     String[] PUBLIC_ENDPOINT_PUT = {""};
     String[] PUBLIC_ENDPOINT_DELETE = {""};
 
@@ -45,19 +48,25 @@ public class SecurityConfiguration {
                                                          AuthManager authManager,
                                                          CustomAuthenticationEntryPoint customAuthenticationEntryPoint,
                                                          RoleBasedAuthorizationManager roleBasedAuthorizationManager) {
+        var publicMatchers = new OrServerWebExchangeMatcher(
+                ServerWebExchangeMatchers.pathMatchers(HttpMethod.GET, PUBLIC_ENDPOINT_GET),
+                ServerWebExchangeMatchers.pathMatchers(HttpMethod.POST, PUBLIC_ENDPOINT_POST),
+                ServerWebExchangeMatchers.pathMatchers(HttpMethod.PUT, PUBLIC_ENDPOINT_PUT),
+                ServerWebExchangeMatchers.pathMatchers(HttpMethod.DELETE, PUBLIC_ENDPOINT_DELETE)
+        );
+
         AuthenticationWebFilter authenticationWebFilter = new AuthenticationWebFilter(authManager);
         authenticationWebFilter.setServerAuthenticationConverter(authConverter);
-        log.info("Configuring SecurityWebFilterChain with custom AuthenticationWebFilter and CustomAuthenticationEntryPoint");
+        authenticationWebFilter.setRequiresAuthenticationMatcher(new NegatedServerWebExchangeMatcher(publicMatchers));
 
         return httpSecurity
-                .addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.FIRST)
+                .addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION)
                 .authorizeExchange(auth -> {
                     auth.pathMatchers(HttpMethod.GET, PUBLIC_ENDPOINT_GET).permitAll();
                     auth.pathMatchers(HttpMethod.POST, PUBLIC_ENDPOINT_POST).permitAll();
                     auth.pathMatchers(HttpMethod.PUT, PUBLIC_ENDPOINT_PUT).permitAll();
                     auth.pathMatchers(HttpMethod.DELETE, PUBLIC_ENDPOINT_DELETE).permitAll();
-                    auth.pathMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**",
-                            "/telegram/**").permitAll();
+                    auth.pathMatchers("/telegram/**").permitAll();
                     auth.pathMatchers("/role/**").access(roleBasedAuthorizationManager);
                     auth.anyExchange().authenticated();
                 })
