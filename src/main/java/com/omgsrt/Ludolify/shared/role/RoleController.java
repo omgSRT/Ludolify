@@ -41,7 +41,6 @@ public class RoleController {
             description = "Bad Request",
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = ErrorCode.class)))
-    @Secured("ROLE_ADMINISTRATOR")
     public Mono<ResponseEntity<ApiResponse<PaginationResponse<Role>>>> getAllRoles(@RequestParam(defaultValue = "1") int pageIndex,
                                                                                    @RequestParam(defaultValue = "10") int pageSize) {
         log.info("RoleController: getAllRoles called with pageIndex: {}, pageSize: {}", pageIndex, pageSize);

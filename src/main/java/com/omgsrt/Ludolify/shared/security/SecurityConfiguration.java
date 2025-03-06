@@ -44,14 +44,12 @@ public class SecurityConfiguration {
                                                          AuthConverter authConverter,
                                                          AuthManager authManager,
                                                          CustomAuthenticationEntryPoint customAuthenticationEntryPoint,
-                                                         CustomSecurityContextRepository securityContextRepository) {
+                                                         RoleBasedAuthorizationManager roleBasedAuthorizationManager) {
         AuthenticationWebFilter authenticationWebFilter = new AuthenticationWebFilter(authManager);
         authenticationWebFilter.setServerAuthenticationConverter(authConverter);
-        authenticationWebFilter.setSecurityContextRepository(securityContextRepository);
         log.info("Configuring SecurityWebFilterChain with custom AuthenticationWebFilter and CustomAuthenticationEntryPoint");
 
         return httpSecurity
-                .securityContextRepository(securityContextRepository)
                 .addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.FIRST)
                 .authorizeExchange(auth -> {
                     auth.pathMatchers(HttpMethod.GET, PUBLIC_ENDPOINT_GET).permitAll();
@@ -60,7 +58,7 @@ public class SecurityConfiguration {
                     auth.pathMatchers(HttpMethod.DELETE, PUBLIC_ENDPOINT_DELETE).permitAll();
                     auth.pathMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**",
                             "/telegram/**").permitAll();
-                    auth.pathMatchers("/role/**").hasAnyAuthority("ROLE_ADMINISTRATOR");
+                    auth.pathMatchers("/role/**").access(roleBasedAuthorizationManager);
                     auth.anyExchange().authenticated();
                 })
                 .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
