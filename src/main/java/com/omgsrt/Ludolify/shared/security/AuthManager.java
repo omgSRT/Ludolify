@@ -25,23 +25,31 @@ public class AuthManager implements ReactiveAuthenticationManager {
 
     @Override
     public Mono<Authentication> authenticate(Authentication authentication) {
+        log.info("AuthManager: Processing authentication: {}", authentication);
         return Mono.justOrEmpty(authentication)
                 .cast(BearerToken.class)
+                .switchIfEmpty(Mono.just(new BearerToken("No token provided")))
                 .flatMap(auth -> {
+                    String token = auth.getCredentials();
+                    log.info("AuthManager: Processing token: {}", token);
                     String subject = springSecurityService.getSubject(auth.getCredentials());
                     List<String> roles = springSecurityService.getRolesFromToken(auth.getCredentials());
+                    log.info("AuthManager: Subject: {}, Roles: {}", subject, roles);
                     return springSecurityService.getAccountByUsername(subject)
                             .map(account -> {
                                 if (account.getUsername() == null) {
+                                    log.error("Account not found for subject: {}", subject);
                                     throw new AppException(ErrorCode.ACCOUNT_NOT_FOUND);
                                 }
                                 if (!springSecurityService.validateJwt(account, auth.getCredentials())) {
+                                    log.error("Invalid or expired token for subject: {}", subject);
                                     throw new AppException(ErrorCode.INVALID_OR_EXPIRED_TOKEN);
                                 }
 
                                 List<SimpleGrantedAuthority> authorities = roles.stream()
                                         .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()))
                                         .collect(Collectors.toList());
+                                log.info("AuthManager: Authorities assigned: {}", authorities);
 
                                 return new UsernamePasswordAuthenticationToken(
                                         account.getUsername(),

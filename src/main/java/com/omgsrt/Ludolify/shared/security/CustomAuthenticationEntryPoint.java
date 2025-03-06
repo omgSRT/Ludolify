@@ -24,6 +24,9 @@ public class CustomAuthenticationEntryPoint implements ServerAuthenticationEntry
 
     @Override
     public Mono<Void> commence(ServerWebExchange exchange, AuthenticationException ex) {
+        log.info("CustomAuthenticationEntryPoint: Path: {}, Exception: {}, Type: {}",
+                exchange.getRequest().getPath(), ex.getMessage(), ex.getClass().getSimpleName());
+
         ErrorCode errorCode = ErrorCode.UNAUTHORIZED;
 
         ApiResponse<String> apiResponse = ApiResponse.<String>builder()

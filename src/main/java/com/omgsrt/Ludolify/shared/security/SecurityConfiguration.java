@@ -6,6 +6,7 @@ import com.omgsrt.Ludolify.shared.exception.ErrorCode;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -23,9 +24,10 @@ import reactor.core.publisher.Mono;
 
 @Configuration
 @EnableWebFluxSecurity
-@EnableMethodSecurity
+@EnableMethodSecurity(securedEnabled = true)
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Slf4j
 public class SecurityConfiguration {
     String[] PUBLIC_ENDPOINT_GET = {""};
     String[] PUBLIC_ENDPOINT_POST = {"/authentication/**", ""};
@@ -41,24 +43,29 @@ public class SecurityConfiguration {
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity httpSecurity,
                                                          AuthConverter authConverter,
                                                          AuthManager authManager,
-                                                         CustomAuthenticationEntryPoint customAuthenticationEntryPoint) {
+                                                         CustomAuthenticationEntryPoint customAuthenticationEntryPoint,
+                                                         CustomSecurityContextRepository securityContextRepository) {
         AuthenticationWebFilter authenticationWebFilter = new AuthenticationWebFilter(authManager);
         authenticationWebFilter.setServerAuthenticationConverter(authConverter);
+        authenticationWebFilter.setSecurityContextRepository(securityContextRepository);
+        log.info("Configuring SecurityWebFilterChain with custom AuthenticationWebFilter and CustomAuthenticationEntryPoint");
 
         return httpSecurity
+                .securityContextRepository(securityContextRepository)
+                .addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.FIRST)
                 .authorizeExchange(auth -> {
-                    auth.pathMatchers(HttpMethod.GET, PUBLIC_ENDPOINT_GET).permitAll()
-                            .pathMatchers(HttpMethod.POST, PUBLIC_ENDPOINT_POST).permitAll()
-                            .pathMatchers(HttpMethod.PUT, PUBLIC_ENDPOINT_PUT).permitAll()
-                            .pathMatchers(HttpMethod.DELETE, PUBLIC_ENDPOINT_DELETE).permitAll()
-                            .pathMatchers("/swagger-ui/**", "/v3/api-docs/**",
-                                    "/swagger-resources/**", "/telegram/**").permitAll()
-                            .anyExchange().authenticated();
+                    auth.pathMatchers(HttpMethod.GET, PUBLIC_ENDPOINT_GET).permitAll();
+                    auth.pathMatchers(HttpMethod.POST, PUBLIC_ENDPOINT_POST).permitAll();
+                    auth.pathMatchers(HttpMethod.PUT, PUBLIC_ENDPOINT_PUT).permitAll();
+                    auth.pathMatchers(HttpMethod.DELETE, PUBLIC_ENDPOINT_DELETE).permitAll();
+                    auth.pathMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**",
+                            "/telegram/**").permitAll();
+                    auth.pathMatchers("/role/**").hasAnyAuthority("ROLE_ADMINISTRATOR");
+                    auth.anyExchange().authenticated();
                 })
                 .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
                 .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
-                .addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION)
                 .exceptionHandling(exception -> {
                     exception.authenticationEntryPoint(customAuthenticationEntryPoint)
                             .accessDeniedHandler((exchange, denied) -> {
