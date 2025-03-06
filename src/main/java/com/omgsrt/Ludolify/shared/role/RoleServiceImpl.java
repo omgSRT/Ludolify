@@ -19,8 +19,7 @@ public class RoleServiceImpl implements RoleService {
     PaginationUtil paginationUtil;
 
     @Override
-    //@PreAuthorize("hasRole('ADMINISTRATOR')")
-    //@PreAuthorize("hasAuthority('ADMINISTRATOR')")
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
     public Mono<PaginationResponse<Role>> getAllRoles(int pageIndex, int pageSize) {
         return roleRepository.findAll()
                 .collectList()

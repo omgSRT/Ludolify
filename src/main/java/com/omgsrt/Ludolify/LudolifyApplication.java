@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.reactive.ReactiveSecurityAutoConfiguration;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import reactor.core.publisher.Mono;
@@ -21,6 +22,7 @@ import java.util.List;
 @EnableScheduling
 @Slf4j
 @RequiredArgsConstructor
+@ComponentScan(basePackages = "com.omgsrt.Ludolify")
 public class LudolifyApplication {
     private final List<DataInitializer> initializerList;
 

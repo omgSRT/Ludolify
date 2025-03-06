@@ -13,6 +13,7 @@ public class AuthConverter implements ServerAuthenticationConverter {
     public Mono<Authentication> convert(ServerWebExchange exchange) {
         return Mono.justOrEmpty(exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION))
                 .filter(string -> string.startsWith("Bearer "))
+                .switchIfEmpty(Mono.just("No Bearer token found"))
                 .map(string -> string.substring(7))
                 .map(BearerToken::new);
     }

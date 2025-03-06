@@ -74,6 +74,6 @@ public class SpringSecurityServiceImpl implements SpringSecurityService {
 
     public List<String> getRolesFromToken(String token) {
         Claims claims = jwtParser.parseSignedClaims(token).getPayload();
-        return claims.get("roles", List.class); // Extract roles from token
+        return claims.get("scope", List.class);
     }
 }

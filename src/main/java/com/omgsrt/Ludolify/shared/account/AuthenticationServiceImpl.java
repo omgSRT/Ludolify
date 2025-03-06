@@ -8,7 +8,6 @@ import com.omgsrt.Ludolify.shared.role.Role;
 import com.omgsrt.Ludolify.shared.role.RoleRepository;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -87,7 +86,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                         .expiration(expirationTime)
                         .id(UUID.randomUUID().toString())
                         .claim("accountId", account.getId().toString())
-                        .claim("roles", roleNameList)
+                        .claim("scope", roleNameList)
                         .signWith(secretKey)
                         .compact());
     }

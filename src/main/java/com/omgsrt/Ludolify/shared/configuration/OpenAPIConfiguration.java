@@ -18,7 +18,7 @@ public class OpenAPIConfiguration {
     private static final String SECURITY_SCHEME_NAME = "Bearer Authentication";
 
     @Bean
-    public OpenAPI ludolify() {
+    public OpenAPI openAPI() {
         return new OpenAPI()
                 .info(apiInfo())
                 .externalDocs(externalDocs())

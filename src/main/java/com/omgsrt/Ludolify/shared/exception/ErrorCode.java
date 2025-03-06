@@ -19,6 +19,7 @@ public enum ErrorCode {
     INVALID_USERNAME_OR_PASSWORD(10009, "Wrong Username Or Password", HttpStatus.BAD_REQUEST),
     ACCOUNT_NOT_FOUND(10010, "Account Not Found", HttpStatus.NOT_FOUND),
     INVALID_OR_EXPIRED_TOKEN(10011, "Invalid Or Expired Token", HttpStatus.BAD_REQUEST),
+    FORBIDDEN(10012, "Forbidden", HttpStatus.FORBIDDEN),
     ;
     private int code;
     private String message;
